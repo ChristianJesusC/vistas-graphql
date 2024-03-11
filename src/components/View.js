@@ -3,6 +3,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider, useMutation, useQuery, gql
 import '../css/View.css';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
+import Swal from 'sweetalert2';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -12,12 +13,13 @@ const client = new ApolloClient({
 function isTokenExpired(token) {
   try {
     const decodedToken = jwtDecode(token);
-    const expirationDate = decodedToken.exp * 1000; // Convertir a milisegundos
+    const expirationDate = decodedToken.exp * 1000;
     return expirationDate < new Date().getTime();
   } catch {
     return true;
   }
 }
+
 const GET_STANDS = gql`
   query GetStands {
     stands {
@@ -89,7 +91,7 @@ function StandsComponent() {
   useEffect(() => {
     const token = localStorage.getItem('auth-token');
     if (!token || isTokenExpired(token)) {
-      localStorage.removeItem('auth-token'); // Eliminar el token expirado
+      localStorage.removeItem('auth-token');
       navigate('/');
     }
   }, [navigate]);
@@ -136,9 +138,6 @@ function StandsComponent() {
           <div className="stand" key={id}>
             <p>
               <strong>Nombre:</strong> {nombre}<br />
-              <strong>Tipo:</strong> {tipo}<br />
-              <strong>Usuario:</strong> {usuario}<br />
-              <strong>Descripción:</strong> {descripcion}
             </p>
             <div className="button-group">
               <button className="button update" onClick={() => {
@@ -152,7 +151,15 @@ function StandsComponent() {
               </button>
               <button className="button delete" onClick={() => deleteStand({ variables: { id } })}>
                 Eliminar Stand
-              </button>
+              </button><button className="button details" onClick={() => {
+    Swal.fire({
+      title: nombre,
+      text: `Tipo: ${tipo}\nUsuario: ${usuario}\nDescripción: ${descripcion}`,
+      icon: 'info',
+    });
+  }}>
+    Ver detalles
+  </button>
             </div>
           </div>
         ))}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { useMutation, gql } from '@apollo/client';
 import Swal from 'sweetalert2';
 import '../css/Login.css';
@@ -9,7 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 function isTokenExpired(token) {
   try {
     const decodedToken = jwtDecode(token);
-    const expirationDate = decodedToken.exp * 1000; // Convertir a milisegundos
+    const expirationDate = decodedToken.exp * 1000;
     return expirationDate < new Date().getTime();
   } catch {
     return true;
@@ -98,6 +98,7 @@ function LoginView() {
           />
         </label>
         <input type="submit" value="Iniciar sesión" />
+        <Link to="/register">Registrarse</Link>
       </form>
       {loading && <p>Iniciando sesión...</p>}
     </div>

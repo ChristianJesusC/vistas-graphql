@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { useMutation, gql } from '@apollo/client';
 import '../css/Register.css';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -82,6 +82,7 @@ function RegisterView() {
           />
         </label>
         <input type="submit" value="Registrarse" />
+        <Link to="/">Regreso</Link>
       </form>
       {loading && <p>Registrando...</p>}
       {error && <p>Error al registrar: {error.message}</p>}
